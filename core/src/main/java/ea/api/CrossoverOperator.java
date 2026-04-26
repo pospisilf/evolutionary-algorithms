@@ -1,5 +1,7 @@
 package ea.api;
 
+import java.util.List;
+
 public interface CrossoverOperator<T> {
-    T[] crossover(T parent1, T parent2);
+    List<T> crossover(T parent1, T parent2);
 }
