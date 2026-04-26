@@ -20,15 +20,24 @@ public class WebSocketHandler {
 
     private final ObjectMapper mapper = new ObjectMapper();
     private final Map<String, AtomicBoolean> runningFlags = new ConcurrentHashMap<>();
+    private final ProblemRegistry registry = new ProblemRegistry();
 
     public void onMessage(WsContext ctx, String message) throws Exception {
-        JsonNode msg = mapper.readTree(message);
-        String type = msg.get("type").asText();
-
-        switch (type) {
-            case "start" -> startEvolution(ctx, msg);
-            case "stop" -> stopEvolution(ctx.sessionId());
-            default -> ctx.send(errorJson("Unknown message type: " + type));
+        try {
+            JsonNode msg = mapper.readTree(message);
+            JsonNode typeNode = msg.get("type");
+            if (typeNode == null) {
+                ctx.send(errorJson("Missing 'type' field"));
+                return;
+            }
+            String type = typeNode.asText();
+            switch (type) {
+                case "start" -> startEvolution(ctx, msg);
+                case "stop" -> stopEvolution(ctx.sessionId());
+                default -> ctx.send(errorJson("Unknown message type: " + type));
+            }
+        } catch (com.fasterxml.jackson.core.JsonProcessingException e) {
+            ctx.send(errorJson("Invalid JSON: " + e.getOriginalMessage()));
         }
     }
 
@@ -47,6 +56,13 @@ public class WebSocketHandler {
         double crossoverRate = params.get("crossoverRate").asDouble(0.8);
         int maxGenerations = params.get("maxGenerations").asInt(500);
         int size = params.has("size") ? params.get("size").asInt(20) : 20;
+
+        try {
+            registry.resolve(problem, size, new int[0][]);
+        } catch (IllegalArgumentException e) {
+            try { ctx.send(errorJson("Unknown problem: " + problem)); } catch (Exception ignored) {}
+            return;
+        }
 
         AtomicBoolean running = new AtomicBoolean(true);
         runningFlags.put(sessionId, running);
