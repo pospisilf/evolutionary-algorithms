@@ -101,4 +101,35 @@ class BenchmarkFunctionsTest {
             .evaluate(new double[]{9.6461, 9.6461});
         assertEquals(24.1568, v, 0.1);
     }
+
+    // ── GA convergence: sphere ────────────────────────────────────────────────
+    // GA should find x near origin → f(x) ≤ 0.1 → bestFitness ≥ −0.1
+    @Test
+    void sphereGaConvergesNearZero() {
+        var best = new java.util.concurrent.atomic.AtomicReference<>(Double.NEGATIVE_INFINITY);
+        BenchmarkFunctions.sphere(2).defaultGa().run(r -> best.set(r.bestFitness()));
+        assertTrue(best.get() > -0.1,
+            "sphere GA should reach bestFitness > −0.1, got " + best.get());
+    }
+
+    // ── GA convergence: rosenbrock ────────────────────────────────────────────
+    // GA should find x near (1,1) → f(x) ≤ 0.5 → bestFitness ≥ −0.5
+    @Test
+    void rosenbrockGaConvergesNearZero() {
+        var best = new java.util.concurrent.atomic.AtomicReference<>(Double.NEGATIVE_INFINITY);
+        BenchmarkFunctions.rosenbrock(2).defaultGa().run(r -> best.set(r.bestFitness()));
+        assertTrue(best.get() > -0.5,
+            "rosenbrock GA should reach bestFitness > −0.5, got " + best.get());
+    }
+
+    // ── GA convergence: styblinskiTang ────────────────────────────────────────
+    // Global min ≈ −78.332 for d=2. GA should reach bestFitness > 77.5
+    // (i.e., f(bestX) < −77.5, within 0.832 of the minimum)
+    @Test
+    void styblinskiTangGaConvergesNearOptimum() {
+        var best = new java.util.concurrent.atomic.AtomicReference<>(Double.NEGATIVE_INFINITY);
+        BenchmarkFunctions.styblinskiTang(2).defaultGa().run(r -> best.set(r.bestFitness()));
+        assertTrue(best.get() > 77.5,
+            "styblinskiTang GA should reach bestFitness > 77.5, got " + best.get());
+    }
 }
