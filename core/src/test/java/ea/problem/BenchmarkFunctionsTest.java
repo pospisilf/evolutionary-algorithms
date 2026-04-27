@@ -33,4 +33,26 @@ class BenchmarkFunctionsTest {
     void ackleyAtOriginIsZero() {
         assertEquals(0.0, BenchmarkFunctions.ackley(2).evaluate(new double[]{0, 0}), 1e-9);
     }
+
+    // ── rosenbrock ────────────────────────────────────────────────────────────
+    // f(x) = Σ [100(x_{i+1}−xᵢ²)² + (1−xᵢ)²], global min 0 at (1,…,1)
+    @Test
+    void rosenbrockAtOnesIsZero() {
+        assertEquals(0.0, BenchmarkFunctions.rosenbrock(2).evaluate(new double[]{1, 1}), 1e-9);
+    }
+
+    // ── levy ──────────────────────────────────────────────────────────────────
+    // wᵢ = 1 + (xᵢ−1)/4; global min 0 at (1,…,1)
+    @Test
+    void levyAtOnesIsZero() {
+        assertEquals(0.0, BenchmarkFunctions.levy(2).evaluate(new double[]{1, 1}), 1e-9);
+    }
+
+    // ── trid ──────────────────────────────────────────────────────────────────
+    // f(x) = Σ(xᵢ−1)² − Σ xᵢ x_{i−1}
+    // d=2 optimum at x=(2,2): f = (1²+1²) − (2×2) = 2−4 = −2 → evaluate = 2.0
+    @Test
+    void tridAtOptimumForD2() {
+        assertEquals(2.0, BenchmarkFunctions.trid(2).evaluate(new double[]{2, 2}), 1e-9);
+    }
 }

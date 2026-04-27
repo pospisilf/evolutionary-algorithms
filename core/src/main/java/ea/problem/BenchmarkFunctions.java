@@ -51,6 +51,54 @@ public final class BenchmarkFunctions {
         );
     }
 
+    public static FunctionOptimization rosenbrock(int d) {
+        return FunctionOptimization.minimize(
+            x -> {
+                double s = 0;
+                for (int i = 0; i < x.length - 1; i++) {
+                    double t = x[i + 1] - x[i] * x[i];
+                    double u = 1 - x[i];
+                    s += 100 * t * t + u * u;
+                }
+                return s;
+            },
+            d, fill(d, -5), fill(d, 10)
+        );
+    }
+
+    public static FunctionOptimization levy(int d) {
+        return FunctionOptimization.minimize(
+            x -> {
+                double[] w = new double[x.length];
+                for (int i = 0; i < x.length; i++) w[i] = 1 + (x[i] - 1) / 4.0;
+                double s = Math.pow(Math.sin(Math.PI * w[0]), 2);
+                for (int i = 0; i < x.length - 1; i++) {
+                    double wi1sin = Math.sin(Math.PI * w[i + 1]);
+                    s += (w[i] - 1) * (w[i] - 1) * (1 + 10 * wi1sin * wi1sin);
+                }
+                double wdsin = Math.sin(2 * Math.PI * w[x.length - 1]);
+                s += (w[x.length - 1] - 1) * (w[x.length - 1] - 1) * (1 + wdsin * wdsin);
+                return s;
+            },
+            d, fill(d, -10), fill(d, 10)
+        );
+    }
+
+    public static FunctionOptimization trid(int d) {
+        double bound = (double) d * d;
+        double[] lo = fill(d, -bound);
+        double[] hi = fill(d,  bound);
+        return FunctionOptimization.minimize(
+            x -> {
+                double s1 = 0, s2 = 0;
+                for (int i = 0; i < x.length; i++) s1 += (x[i] - 1) * (x[i] - 1);
+                for (int i = 1; i < x.length; i++) s2 += x[i] * x[i - 1];
+                return s1 - s2;
+            },
+            d, lo, hi
+        );
+    }
+
     private static double[] fill(int d, double v) {
         double[] a = new double[d]; Arrays.fill(a, v); return a;
     }
