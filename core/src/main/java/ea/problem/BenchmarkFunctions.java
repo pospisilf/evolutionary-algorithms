@@ -17,7 +17,7 @@ public final class BenchmarkFunctions {
         return FunctionOptimization.minimize(
             x -> {
                 double sum = 0, prod = 1;
-                for (int i = 0; i < d; i++) {
+                for (int i = 0; i < x.length; i++) {
                     sum += x[i] * x[i] / 4000.0;
                     prod *= Math.cos(x[i] / Math.sqrt(i + 1));
                 }
