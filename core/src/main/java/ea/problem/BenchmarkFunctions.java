@@ -135,6 +135,30 @@ public final class BenchmarkFunctions {
         );
     }
 
+    public static FunctionOptimization bukin() {
+        return FunctionOptimization.minimize(
+            x -> 100 * Math.sqrt(Math.abs(x[1] - 0.01 * x[0] * x[0]))
+               + 0.01 * Math.abs(x[0] + 10),
+            2,
+            new double[]{-15, -3},
+            new double[]{-5,   3}
+        );
+    }
+
+    public static FunctionOptimization carromTable() {
+        return FunctionOptimization.minimize(
+            x -> {
+                double r = Math.sqrt(x[0] * x[0] + x[1] * x[1]);
+                double e = Math.exp(Math.abs(1 - r / Math.PI));
+                double c = Math.cos(x[0]) * Math.cos(x[1]) * e;
+                return -(c * c) / 30.0;
+            },
+            2,
+            new double[]{-10, -10},
+            new double[]{ 10,  10}
+        );
+    }
+
     private static double[] fill(int d, double v) {
         double[] a = new double[d]; Arrays.fill(a, v); return a;
     }

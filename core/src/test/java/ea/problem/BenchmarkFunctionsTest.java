@@ -84,4 +84,21 @@ class BenchmarkFunctionsTest {
             .evaluate(new double[]{2.2029, Math.PI / 2});
         assertEquals(1.8013, v, 0.05);
     }
+
+    // ── bukin N.6 ─────────────────────────────────────────────────────────────
+    // f(x,y) = 100√(|y − 0.01x²|) + 0.01|x+10|, global min 0 at (−10, 1)
+    @Test
+    void bukinAtOptimumIsZero() {
+        assertEquals(0.0, BenchmarkFunctions.bukin().evaluate(new double[]{-10, 1}), 1e-9);
+    }
+
+    // ── carrom table ──────────────────────────────────────────────────────────
+    // f(x1,x2) = −[cos(x1)cos(x2)exp(|1−√(x1²+x2²)/π|)]²/30
+    // global min ≈ −24.1568 at (±9.6461, ±9.6461) → evaluate ≈ 24.1568
+    @Test
+    void carromTableNearOptimum() {
+        double v = BenchmarkFunctions.carromTable()
+            .evaluate(new double[]{9.6461, 9.6461});
+        assertEquals(24.1568, v, 0.1);
+    }
 }
