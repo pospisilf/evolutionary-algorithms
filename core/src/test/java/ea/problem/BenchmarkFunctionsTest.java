@@ -62,7 +62,7 @@ class BenchmarkFunctionsTest {
     void schwefelNearZeroAtKnownOptimum() {
         double v = BenchmarkFunctions.schwefel(2)
             .evaluate(new double[]{420.9687, 420.9687});
-        assertEquals(0.0, v, 1.0);
+        assertEquals(0.0, v, 0.01);
     }
 
     // ── styblinskiTang ────────────────────────────────────────────────────────
