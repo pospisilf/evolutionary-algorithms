@@ -99,6 +99,42 @@ public final class BenchmarkFunctions {
         );
     }
 
+    public static FunctionOptimization schwefel(int d) {
+        return FunctionOptimization.minimize(
+            x -> {
+                double s = 0;
+                for (double v : x) s += v * Math.sin(Math.sqrt(Math.abs(v)));
+                return 418.9829 * x.length - s;
+            },
+            d, fill(d, -500), fill(d, 500)
+        );
+    }
+
+    public static FunctionOptimization styblinskiTang(int d) {
+        return FunctionOptimization.minimize(
+            x -> {
+                double s = 0;
+                for (double v : x) s += v * v * v * v - 16 * v * v + 5 * v;
+                return s / 2.0;
+            },
+            d, fill(d, -5), fill(d, 5)
+        );
+    }
+
+    public static FunctionOptimization michalewicz(int d) {
+        return FunctionOptimization.minimize(
+            x -> {
+                double s = 0;
+                for (int i = 0; i < x.length; i++) {
+                    double inner = (i + 1) * x[i] * x[i] / Math.PI;
+                    s += Math.sin(x[i]) * Math.pow(Math.sin(inner), 20);
+                }
+                return -s;
+            },
+            d, fill(d, 0), fill(d, Math.PI)
+        );
+    }
+
     private static double[] fill(int d, double v) {
         double[] a = new double[d]; Arrays.fill(a, v); return a;
     }

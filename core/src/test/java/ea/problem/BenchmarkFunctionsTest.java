@@ -55,4 +55,33 @@ class BenchmarkFunctionsTest {
     void tridAtOptimumForD2() {
         assertEquals(2.0, BenchmarkFunctions.trid(2).evaluate(new double[]{2, 2}), 1e-9);
     }
+
+    // ── schwefel ──────────────────────────────────────────────────────────────
+    // f(x) = 418.9829d − Σ xᵢ sin(√|xᵢ|), global min ≈ 0 at xᵢ ≈ 420.9687
+    @Test
+    void schwefelNearZeroAtKnownOptimum() {
+        double v = BenchmarkFunctions.schwefel(2)
+            .evaluate(new double[]{420.9687, 420.9687});
+        assertEquals(0.0, v, 1.0);
+    }
+
+    // ── styblinskiTang ────────────────────────────────────────────────────────
+    // f(x) = ½ Σ(xᵢ⁴ − 16xᵢ² + 5xᵢ), global min ≈ −39.1662 per dimension at xᵢ ≈ −2.903534
+    // evaluate returns −f(x*) ≈ 39.1662
+    @Test
+    void styblinskiTangAtKnownOptimum() {
+        double v = BenchmarkFunctions.styblinskiTang(1)
+            .evaluate(new double[]{-2.903534});
+        assertEquals(39.1662, v, 0.001);
+    }
+
+    // ── michalewicz ───────────────────────────────────────────────────────────
+    // f(x) = −Σ sin(xᵢ) sin²⁰(i xᵢ²/π), domain [0,π], global min ≈ −1.8013 for d=2
+    // evaluate returns −f(x*) ≈ 1.8013
+    @Test
+    void michalewiczNearOptimumForD2() {
+        double v = BenchmarkFunctions.michalewicz(2)
+            .evaluate(new double[]{2.2029, Math.PI / 2});
+        assertEquals(1.8013, v, 0.05);
+    }
 }
