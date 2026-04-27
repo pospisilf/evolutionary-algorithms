@@ -17,10 +17,22 @@ public class ProblemRegistry {
                 }
                 yield extraData.length > 0 ? new TSP(cities) : new TSP(defaultCities(size));
             }
-            case "function" -> FunctionOptimization.minimize(
+            case "function"    -> FunctionOptimization.minimize(
                 vars -> vars[0] * vars[0] + vars[1] * vars[1],
                 2, new double[]{-5, -5}, new double[]{5, 5}
             );
+            case "sphere"      -> BenchmarkFunctions.sphere(size > 0 ? size : 2);
+            case "ackley"      -> BenchmarkFunctions.ackley(size > 0 ? size : 2);
+            case "griewank"    -> BenchmarkFunctions.griewank(size > 0 ? size : 2);
+            case "rastrigin"   -> BenchmarkFunctions.rastrigin(size > 0 ? size : 2);
+            case "schwefel"    -> BenchmarkFunctions.schwefel(size > 0 ? size : 2);
+            case "rosenbrock"  -> BenchmarkFunctions.rosenbrock(size > 0 ? size : 2);
+            case "trid"        -> BenchmarkFunctions.trid(size > 0 ? size : 2);
+            case "styblinski"  -> BenchmarkFunctions.styblinskiTang(size > 0 ? size : 2);
+            case "levy"        -> BenchmarkFunctions.levy(size > 0 ? size : 2);
+            case "michalewicz" -> BenchmarkFunctions.michalewicz(size > 0 ? size : 2);
+            case "bukin"       -> BenchmarkFunctions.bukin();
+            case "carrom"      -> BenchmarkFunctions.carromTable();
             default -> throw new IllegalArgumentException("Unknown problem: " + name);
         };
     }
