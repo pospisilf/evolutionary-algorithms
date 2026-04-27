@@ -30,8 +30,8 @@ public class FunctionOptimization implements FitnessFunction<double[]> {
     }
 
     public int dimensions() { return dimensions; }
-    public double[] lowerBounds() { return lowerBounds; }
-    public double[] upperBounds() { return upperBounds; }
+    public double[] lowerBounds() { return lowerBounds.clone(); }
+    public double[] upperBounds() { return upperBounds.clone(); }
 
     @Override
     public double evaluate(double[] individual) {
