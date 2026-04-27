@@ -30,7 +30,7 @@ public final class BenchmarkFunctions {
     public static FunctionOptimization rastrigin(int d) {
         return FunctionOptimization.minimize(
             x -> {
-                double s = 10.0 * d;
+                double s = 10.0 * x.length;
                 for (double v : x) s += v * v - 10 * Math.cos(2 * Math.PI * v);
                 return s;
             },
@@ -43,8 +43,8 @@ public final class BenchmarkFunctions {
             x -> {
                 double sumSq = 0, sumCos = 0;
                 for (double v : x) { sumSq += v * v; sumCos += Math.cos(2 * Math.PI * v); }
-                return -20 * Math.exp(-0.2 * Math.sqrt(sumSq / d))
-                     - Math.exp(sumCos / d)
+                return -20 * Math.exp(-0.2 * Math.sqrt(sumSq / x.length))
+                     - Math.exp(sumCos / x.length)
                      + 20 + Math.E;
             },
             d, fill(d, -32.768), fill(d, 32.768)
