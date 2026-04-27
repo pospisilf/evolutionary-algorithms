@@ -134,8 +134,37 @@ public class WebSocketHandler {
                     .mutation(new GaussianMutation(0.5)).mutationRate(mutationRate)
                     .populationSize(populationSize).termination(new MaxGenerations<>(maxGenerations)).build();
             }
+            case "sphere", "ackley", "griewank", "rastrigin", "schwefel",
+                 "rosenbrock", "trid", "styblinski", "levy", "michalewicz",
+                 "bukin", "carrom" -> {
+                var p = (FunctionOptimization) registry.resolve(problem, size > 0 ? size : 2, new int[0][]);
+                yield buildDoubleGa(p, populationSize, mutationRate, crossoverRate, maxGenerations);
+            }
             default -> throw new IllegalArgumentException("Unknown problem: " + problem);
         };
+    }
+
+    private GeneticAlgorithm<double[]> buildDoubleGa(FunctionOptimization p,
+            int populationSize, double mutationRate, double crossoverRate, int maxGenerations) {
+        Random rng = new Random();
+        double[] lo = p.lowerBounds();
+        double[] hi = p.upperBounds();
+        int d = p.dimensions();
+        return new GeneticAlgorithm.Builder<double[]>()
+            .chromosomeSupplier(() -> {
+                double[] chr = new double[d];
+                for (int i = 0; i < d; i++) chr[i] = lo[i] + rng.nextDouble() * (hi[i] - lo[i]);
+                return chr;
+            })
+            .fitnessFunction(p)
+            .selection(new TournamentSelection<>(5))
+            .crossover(new DoubleSinglePointCrossover())
+            .crossoverRate(crossoverRate)
+            .mutation(new GaussianMutation(0.5))
+            .mutationRate(mutationRate)
+            .populationSize(populationSize)
+            .termination(new MaxGenerations<>(maxGenerations))
+            .build();
     }
 
     private String generationJson(GenerationResult<?> result) throws Exception {

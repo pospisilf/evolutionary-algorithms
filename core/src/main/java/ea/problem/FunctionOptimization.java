@@ -29,6 +29,10 @@ public class FunctionOptimization implements FitnessFunction<double[]> {
         return new FunctionOptimization(vars -> -f.applyAsDouble(vars), dimensions, lowerBounds, upperBounds);
     }
 
+    public int dimensions() { return dimensions; }
+    public double[] lowerBounds() { return lowerBounds; }
+    public double[] upperBounds() { return upperBounds; }
+
     @Override
     public double evaluate(double[] individual) {
         return function.applyAsDouble(individual);
